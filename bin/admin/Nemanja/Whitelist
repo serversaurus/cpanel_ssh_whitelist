@@ -1,0 +1,34 @@
+#!/usr/local/cpanel/3rdparty/bin/perl
+
+package Nemanja::Whitelist;
+
+use strict;
+
+use parent qw( Cpanel::AdminBin::Script::Call );
+
+use Cpanel::Logger          ();
+use Cpanel::FileUtils::Write  ();
+
+__PACKAGE__->run() if !caller;
+
+sub _actions {
+    return qw(
+        WRITE_HOST
+        );
+    }
+
+sub WRITE_HOST {
+    my ($self, $path, $hosts) = @_;
+
+    my $val;
+    
+    $val = Cpanel::FileUtils::Write::overwrite(
+        $path, $hosts, 0644,
+            );
+
+    return $val;
+
+
+}
+
+1;

@@ -1,0 +1,12 @@
+[
+    {
+        "icon": "icon-48x48.png",
+        "name": "SSH Whitelist",
+        "group_id": "security",
+        "order": "10",
+        "type": "link",
+        "id": "nemj-wl",
+        "uri": "/frontend/paper_lantern/nemj_whitelist/index.live.php"
+    }
+]
+
