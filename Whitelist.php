@@ -42,6 +42,7 @@ class Nemj_Whitelist
 
     public function addIp($label, $ip)
     {
+        $label = urldecode($label);
         $hosts = '';
         $path = $this->userPath;
 
