@@ -88,6 +88,7 @@ class Nemj_Whitelist
      */
     public function addIp($label, $ip)
     {
+        // TODO: add ability to use subnets.
         $label = urldecode($label);
         $hosts = '';
         $path = $this->userPath;
