@@ -1,17 +1,50 @@
 <?php
-
+/**
+ * Add User declared IP's to hosts.allow.
+ * User will add an IP with a label which will subsequently be stored in a file in
+ * the user directory and the IP added to hosts allow.
+ *
+ * PHP version 5
+ *
+ * @category  Security
+ * @package   Whitelist
+ * @author    David Ford <djfordz@gmail.com>
+ * @copyright 2017 Transgress Inc.
+ * @license   The MIT License(MIT) https://tldrlegal.com/license/mit-license#fulltext
+ * @version   Release: 1.2
+ * @link      https://github.com/djfordz/cpanel_ssh_whitelist/releases
+ */
 class Nemj_Whitelist
 {
 
+    /**
+     * File hosts.allow path
+     *
+     * @var string
+     */
     const HOSTS_PATH = '/etc/hosts.allow';
-    const ADMIN_PATH = '/etc/admin.hosts.allow';
-    const ALL_PATH = '/usr/local/cpanel/base/frontend/paper_lantern/nemj_whitelist/.all.hosts.allow';
 
-
+    /**
+     * UserPath
+     *
+     * @var string
+     */
     protected $userPath = null;
 
+    /**
+     * Cpanel object
+     *
+     * @var object
+     */
     protected $cpanel = null;
 
+    /**
+     * Constructs whitelist object, passes in cpanel object.
+     *
+     * @param object $cpanel pass in cpanel object
+     *
+     * @return void
+     */
     public function __construct($cpanel)
     {
         $processUser = posix_getpwuid(posix_geteuid());
@@ -21,6 +54,11 @@ class Nemj_Whitelist
         $this->userPath = "/home/$user/.users.allow";
     }
 
+    /**
+     * Get a list of IP's from user path.
+     *
+     * @return array|null
+     */
     public function getIps()
     {
         if (is_file($this->userPath)) {
@@ -40,6 +78,14 @@ class Nemj_Whitelist
         }
     }
 
+    /**
+     * Add IP to user file and hosts.allow.
+     *
+     * @param string $label user declared label
+     * @param string $ip    user declared ip
+     *
+     * @return none
+     */
     public function addIp($label, $ip)
     {
         $label = urldecode($label);
@@ -47,7 +93,7 @@ class Nemj_Whitelist
         $path = $this->userPath;
 
         if (!$this->isIp($ip)) {
-            $this->notValidError();
+            $this->error(2);
             return false;
         }
 
@@ -64,7 +110,7 @@ class Nemj_Whitelist
         }
 
         if (strpos($hosts, $ip)) {
-            $this->duplicateError();
+            $this->error(1);
             return;
         }
 
@@ -86,6 +132,13 @@ class Nemj_Whitelist
 
     }
 
+    /**
+     * Check if IP is valid
+     *
+     * @param string $ip user declared IP
+     *
+     * @return bool
+     */
     public function isIp($ip = null)
     {
         if (!$ip or strlen(trim($ip)) == 0) {
@@ -99,11 +152,21 @@ class Nemj_Whitelist
                     return false;
                 }
             }
+            if($ip == '0.0.0.0') {
+                return false;
+            }
             return true;
         }
         return false;
     }
 
+    /**
+     * Remove IP from hosts.allow and user file.
+     *
+     * @param string $ip user declared IP
+     *
+     * @return none
+     */
     public function removeIp($ip)
     {
         $path = $this->userPath;
@@ -133,6 +196,14 @@ class Nemj_Whitelist
         $this->writeHosts($ip, true);
     }
 
+    /**
+     * write to hosts.allow file.
+     *
+     * This method requires escalation of privileges which is done through api call
+     *
+     * @param string $ip user declared IP
+     * @param bool $flag set flag if IP exists
+      */
     protected function writeHosts($ip, $flag = false)
     {
         $admin = '';
@@ -199,15 +270,25 @@ class Nemj_Whitelist
 
     }
 
-    protected function duplicateError() 
+    /**
+     * Error Messages
+     *
+     * @param int $num error number
+     *
+     * @return string error
+      */
+    protected function error($num) 
     {
-        echo "<h4 style='color:red'>IP is Duplicate.</h4>";
+        switch($error) {
+            case 1: echo "<h4 style='color:red'>IP is Duplicate.</h4>";
+                break;
+            case 2: echo "<h4 style='color:red'>IP entered is invalid.</h4>" 
+                break;
+            default: echo "<h4 style='color:red'>Unspecified Error.</h4>" 
+                break;
+
+        }
     }
 
-    protected function notValidError() 
-    {
-        echo "<h4 style='color:red'>IP entered is invalid.</h4>";
-    }
 }
-
 
