@@ -26,3 +26,6 @@ chmod +x uninstall
 To add admin IP's or IP's that you do not want user to see or alter. add to `/etc/hosts.allow` where it is commented to add admin IP's
 
 Submit issues for bugs.
+
+Future features:
+add support for subnets
