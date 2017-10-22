@@ -94,7 +94,7 @@ class Nemj_Whitelist
         $path = $this->userPath;
 
         if (!$this->isIp($ip)) {
-            $this->error(2);
+            echo $this->error(2);
             return false;
         }
 
@@ -111,8 +111,8 @@ class Nemj_Whitelist
         }
 
         if (strpos($hosts, $ip)) {
-            $this->error(1);
-            return;
+            echo $this->error(1);
+            return false;
         }
 
         $h = explode("\n", $hosts);
@@ -280,16 +280,17 @@ class Nemj_Whitelist
       */
     protected function error($num) 
     {
-        switch($error) {
-            case 1: echo "<h4 style='color:red'>IP is Duplicate.</h4>";
+        $result = null;
+        switch($num) {
+            case 1 : $result =  "<h4 style='color:red'>IP is Duplicate.</h4>";
                 break;
-            case 2: echo "<h4 style='color:red'>IP entered is invalid.</h4>" 
+            case 2 : $result = "<h4 style='color:red'>IP entered is invalid.</h4>"; 
                 break;
-            default: echo "<h4 style='color:red'>Unspecified Error.</h4>" 
+            default : $result =  "<h4 style='color:red'>Unspecified Error.</h4>"; 
                 break;
-
         }
-    }
 
+        return $result;
+    }
 }
 
