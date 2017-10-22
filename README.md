@@ -19,8 +19,15 @@ To uninstall:
 use the uninstall script. 
 
 ```
-chmod +x uninstall
-./uninstall
+chmod +x uninstall.sh
+./uninstall.sh
+```
+
+If plugin is already installed and you just want to update to the latest release, use update sript to preserve all User IP's
+
+```
+chmod +x update.sh
+./update.sh
 ```
 
 To add admin IP's or IP's that you do not want user to see or alter. add to `/etc/hosts.allow` where it is commented to add admin IP's
