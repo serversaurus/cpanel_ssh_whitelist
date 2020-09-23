@@ -9,7 +9,7 @@ copy `nemj_whitelist.tar.gz` to cpanel server.
 
 ```
 wget https://github.com/TransgressInc/cpanel_ssh_whitelist/archive/ssh_whitelist-1.1.tar.gz 
-tar -xvf nemj_whitelist-1.0.tar.gz && cd cpanel_ssh_whitelist-ssh_whitelist-1.1/ 
+tar -xvf ssh_whitelist-1.1.tar.gz && cd cpanel_ssh_whitelist-ssh_whitelist-1.1/ 
 chmod +x install.sh
 ./install.sh
 ```
